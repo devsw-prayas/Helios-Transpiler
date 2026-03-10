@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.37012.4 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helios-Transpiler", "Helios-Transpiler\Helios-Transpiler.csproj", "{846F371A-77BC-460A-AD29-140991A526FA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{846F371A-77BC-460A-AD29-140991A526FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{846F371A-77BC-460A-AD29-140991A526FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{846F371A-77BC-460A-AD29-140991A526FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{846F371A-77BC-460A-AD29-140991A526FA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B83A7E18-B568-415E-A286-7ED11D3D5BC3}
+	EndGlobalSection
+EndGlobal

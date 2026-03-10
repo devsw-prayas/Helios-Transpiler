@@ -1,0 +1,401 @@
+<Window x:Class="Helios_Transpiler.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Helios-DLX Transpiler"
+        Height="800" Width="1400"
+        MinHeight="500" MinWidth="900"
+        WindowStartupLocation="CenterScreen"
+        Background="Transparent"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        ResizeMode="CanResize">
+
+    <!-- ══ ROOT BORDER — rounded 12 + diagonal gradient ══ -->
+    <Border CornerRadius="12" ClipToBounds="True">
+        <Border.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="{DynamicResource BgLight}" Offset="0"/>
+                <GradientStop Color="{DynamicResource BgMid}"   Offset="0.45"/>
+                <GradientStop Color="{DynamicResource BgDark}"  Offset="1"/>
+            </LinearGradientBrush>
+        </Border.Background>
+
+        <Grid>
+            <!-- ghost watermark -->
+            <StackPanel HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                        Margin="20,0,0,10" IsHitTestVisible="False" Panel.ZIndex="0">
+                <TextBlock Text="HDS"
+                           FontSize="130" FontWeight="Black"
+                           FontFamily="Consolas"
+                           Foreground="{DynamicResource AccentBrush}"
+                           Opacity="0.04" LineHeight="120"/>
+                <TextBlock Text=".HLX"
+                           FontSize="130" FontWeight="Black"
+                           FontFamily="Consolas"
+                           Foreground="{DynamicResource AccentBrush}"
+                           Opacity="0.04" LineHeight="120"/>
+                <TextBlock Text="HELIOS"
+                           FontSize="130" FontWeight="Black"
+                           FontFamily="Consolas"
+                           Foreground="{DynamicResource AccentBrush}"
+                           Opacity="0.04" LineHeight="120"/>
+            </StackPanel>
+
+            <Grid Panel.ZIndex="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="48"/>   <!-- title bar -->
+                    <RowDefinition Height="30"/>   <!-- menu bar -->
+                    <RowDefinition Height="*"/>    <!-- content -->
+                    <RowDefinition Height="22"/>   <!-- status strip -->
+                </Grid.RowDefinitions>
+
+                <!-- ── TITLE BAR ── -->
+                <Border Grid.Row="0"
+                        Background="#441A0830"
+                        BorderBrush="{DynamicResource BorderDimBrush}"
+                        BorderThickness="0,0,0,1"
+                        MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+                    <Grid Margin="16,0">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                            <TextBlock Foreground="{DynamicResource AccentBrush}"
+                                       FontSize="14" FontWeight="Black"
+                                       FontFamily="Consolas"
+                                       VerticalAlignment="Center" Margin="0,0,14,0">
+                                <TextBlock.Text>HELIOS-DLX</TextBlock.Text>
+                                <TextBlock.Effect>
+                                    <DropShadowEffect Color="{DynamicResource AccentColor}"
+                                                      BlurRadius="16" ShadowDepth="0" Opacity="0.85"/>
+                                </TextBlock.Effect>
+                            </TextBlock>
+                            <TextBlock Text="//  transpiler"
+                                       Foreground="{DynamicResource TextDimBrush}"
+                                       FontSize="12" FontFamily="Consolas" VerticalAlignment="Center"/>
+                            <TextBlock Text=" · "
+                                       Foreground="{DynamicResource TextDimBrush}"
+                                       FontSize="12" FontFamily="Consolas" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="TitleProjectLabel"
+                                       Foreground="{DynamicResource TextDimBrush}"
+                                       FontSize="12" FontFamily="Consolas" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                            <Button Content="—" Style="{StaticResource WindowButton}" Click="MinimizeBtn_Click"/>
+                            <Button Content="□" Style="{StaticResource WindowButton}" Click="MaximizeBtn_Click"/>
+                            <Button Content="✕" Style="{StaticResource CloseButton}"  Click="CloseBtn_Click"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- ── MENU BAR ── -->
+                <Border Grid.Row="1"
+                        Background="#220A1820"
+                        BorderBrush="{DynamicResource BorderDimBrush}"
+                        BorderThickness="0,0,0,1">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="8,0">
+
+                        <!-- File menu -->
+                        <Grid>
+                            <Button x:Name="FileMenuBtn" Content="File"
+                                    Style="{StaticResource MenuBarButton}"
+                                    Click="FileMenuBtn_Click"/>
+                            <Popup x:Name="FileMenuPopup" StaysOpen="False"
+                                   PlacementTarget="{Binding ElementName=FileMenuBtn}"
+                                   Placement="Bottom" AllowsTransparency="True" PopupAnimation="Fade">
+                                <Border Background="{DynamicResource PanelBgBrush}"
+                                        BorderBrush="{DynamicResource BorderMidBrush}"
+                                        BorderThickness="1" CornerRadius="8"
+                                        MinWidth="220" Margin="0,2,0,0">
+                                    <Border.Effect>
+                                        <DropShadowEffect BlurRadius="18" ShadowDepth="6" Color="#000000" Opacity="0.7"/>
+                                    </Border.Effect>
+                                    <StackPanel Margin="4,6">
+                                        <Button Content="New File          Ctrl+N"
+                                                Style="{StaticResource MenuBarButton}"
+                                                HorizontalContentAlignment="Left" Padding="10,0"
+                                                Click="NewFile_Click"/>
+                                        <Button Content="Open Project      Ctrl+O"
+                                                Style="{StaticResource MenuBarButton}"
+                                                HorizontalContentAlignment="Left" Padding="10,0"
+                                                Click="OpenProject_Click"/>
+                                        <Button Content="Save              Ctrl+S"
+                                                Style="{StaticResource MenuBarButton}"
+                                                HorizontalContentAlignment="Left" Padding="10,0"
+                                                Click="SaveFile_Click"/>
+                                        <Button Content="Save As..."
+                                                Style="{StaticResource MenuBarButton}"
+                                                HorizontalContentAlignment="Left" Padding="10,0"
+                                                Click="SaveAsFile_Click"/>
+                                        <Border Height="1" Margin="8,4"
+                                                Background="{DynamicResource BorderDimBrush}" Opacity="0.6"/>
+                                        <Button Content="Close Tab         Ctrl+W"
+                                                Style="{StaticResource MenuBarButton}"
+                                                HorizontalContentAlignment="Left" Padding="10,0"
+                                                Click="CloseTab_Click"/>
+                                    </StackPanel>
+                                </Border>
+                            </Popup>
+                        </Grid>
+
+                        <!-- View menu -->
+                        <Grid>
+                            <Button x:Name="ViewMenuBtn" Content="View"
+                                    Style="{StaticResource MenuBarButton}"
+                                    Click="ViewMenuBtn_Click"/>
+                            <Popup x:Name="ViewMenuPopup" StaysOpen="False"
+                                   PlacementTarget="{Binding ElementName=ViewMenuBtn}"
+                                   Placement="Bottom" AllowsTransparency="True" PopupAnimation="Fade">
+                                <Border Background="{DynamicResource PanelBgBrush}"
+                                        BorderBrush="{DynamicResource BorderMidBrush}"
+                                        BorderThickness="1" CornerRadius="8"
+                                        MinWidth="220" Margin="0,2,0,0">
+                                    <Border.Effect>
+                                        <DropShadowEffect BlurRadius="18" ShadowDepth="6" Color="#000000" Opacity="0.7"/>
+                                    </Border.Effect>
+                                    <StackPanel Margin="4,6">
+                                        <Button Content="Toggle Project Panel   Ctrl+\"
+                                                Style="{StaticResource MenuBarButton}"
+                                                HorizontalContentAlignment="Left" Padding="10,0"
+                                                Click="ToggleProjectPanel_Click"/>
+                                        <Button Content="Toggle IR Panel   Ctrl+Shift+I"
+                                                Style="{StaticResource MenuBarButton}"
+                                                HorizontalContentAlignment="Left" Padding="10,0"
+                                                Click="ToggleIRPanel_Click"/>
+                                        <Button Content="Toggle Output       Ctrl+`"
+                                                Style="{StaticResource MenuBarButton}"
+                                                HorizontalContentAlignment="Left" Padding="10,0"
+                                                Click="ToggleOutputPanel_Click"/>
+                                    </StackPanel>
+                                </Border>
+                            </Popup>
+                        </Grid>
+
+                        <Button Content="Build" Style="{StaticResource MenuBarButton}"
+                                Click="BuildBtn_Click"/>
+                        <Button Content="Preferences" Style="{StaticResource MenuBarButton}"
+                                Click="PreferencesBtn_Click"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- ── CONTENT AREA: project tree + editor + IR ── -->
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <!-- project panel -->
+                        <ColumnDefinition x:Name="ProjectPanelCol" Width="220" MinWidth="0"/>
+                        <ColumnDefinition Width="5"/>
+                        <!-- editor -->
+                        <ColumnDefinition Width="*" MinWidth="200"/>
+                        <!-- splitter -->
+                        <ColumnDefinition Width="5"/>
+                        <!-- IR output -->
+                        <ColumnDefinition x:Name="IRPanelCol" Width="320" MinWidth="0"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- ══ PROJECT PANEL ══ -->
+                    <Border Grid.Column="0"
+                            Margin="10,10,0,10"
+                            CornerRadius="10" BorderThickness="1">
+                        <Border.BorderBrush>
+                            <SolidColorBrush Color="{DynamicResource AccentColor}" Opacity="0.25"/>
+                        </Border.BorderBrush>
+                        <Border.Background>
+                            <SolidColorBrush Color="{DynamicResource PanelBgDark}" Opacity="0.5"/>
+                        </Border.Background>
+                        <Grid>
+                            <!-- Panel header -->
+                            <Border Height="34" VerticalAlignment="Top"
+                                    CornerRadius="10,10,0,0" BorderThickness="0,0,0,1">
+                                <Border.Background>
+                                    <SolidColorBrush Color="{DynamicResource BgLight}" Opacity="0.35"/>
+                                </Border.Background>
+                                <Border.BorderBrush>
+                                    <SolidColorBrush Color="{DynamicResource AccentColor}" Opacity="0.12"/>
+                                </Border.BorderBrush>
+                                <Grid Margin="10,0">
+                                    <!-- [PROJECT] badge -->
+                                    <Border CornerRadius="3" Padding="6,2"
+                                            HorizontalAlignment="Left" VerticalAlignment="Center"
+                                            BorderThickness="1">
+                                        <Border.Background>
+                                            <SolidColorBrush Color="{DynamicResource BorderDim}"/>
+                                        </Border.Background>
+                                        <Border.BorderBrush>
+                                            <SolidColorBrush Color="{DynamicResource AccentColor}"/>
+                                        </Border.BorderBrush>
+                                        <TextBlock Text="PROJECT"
+                                                   Foreground="{DynamicResource AccentBrush}"
+                                                   FontSize="9" FontWeight="Bold" FontFamily="Consolas"/>
+                                    </Border>
+                                </Grid>
+                            </Border>
+
+                            <!-- File tree placeholder -->
+                            <TextBlock Text="no project loaded"
+                                       Foreground="{DynamicResource TextDimBrush}"
+                                       FontFamily="Consolas" FontSize="12"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"
+                                       Margin="0,34,0,0"/>
+                        </Grid>
+                    </Border>
+
+                    <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch"
+                                  Cursor="SizeWE">
+                        <GridSplitter.Background>
+                            <SolidColorBrush Color="{DynamicResource BorderDim}"/>
+                        </GridSplitter.Background>
+                    </GridSplitter>
+
+                    <!-- ══ EDITOR PANEL ══ -->
+                    <Border Grid.Column="2"
+                            Margin="0,10,0,10"
+                            CornerRadius="10" BorderThickness="1">
+                        <Border.BorderBrush>
+                            <SolidColorBrush Color="{DynamicResource AccentColor}" Opacity="0.25"/>
+                        </Border.BorderBrush>
+                        <Border.Background>
+                            <SolidColorBrush Color="{DynamicResource PanelBgDark}" Opacity="0.4"/>
+                        </Border.Background>
+                        <Grid>
+                            <!-- Tab header strip -->
+                            <Border Height="34" VerticalAlignment="Top"
+                                    CornerRadius="10,10,0,0" BorderThickness="0,0,0,1">
+                                <Border.Background>
+                                    <SolidColorBrush Color="{DynamicResource BgLight}" Opacity="0.35"/>
+                                </Border.Background>
+                                <Border.BorderBrush>
+                                    <SolidColorBrush Color="{DynamicResource AccentColor}" Opacity="0.12"/>
+                                </Border.BorderBrush>
+                                <Grid Margin="8,0">
+                                    <!-- Tab strip (left) -->
+                                    <StackPanel Orientation="Horizontal"
+                                                HorizontalAlignment="Left" VerticalAlignment="Center">
+                                        <!-- Tabs will be populated here in Phase 2 -->
+                                        <TextBlock x:Name="EditorTabPlaceholder"
+                                                   Text="untitled.hds"
+                                                   Foreground="{DynamicResource AccentBrush}"
+                                                   FontFamily="Consolas" FontSize="12"
+                                                   VerticalAlignment="Center" Margin="4,0,0,0"/>
+                                    </StackPanel>
+                                    <!-- [HDS] badge right -->
+                                    <Border CornerRadius="3" Padding="6,2"
+                                            HorizontalAlignment="Right" VerticalAlignment="Center">
+                                        <Border.Background>
+                                            <SolidColorBrush Color="{DynamicResource AccentDimColor}"/>
+                                        </Border.Background>
+                                        <TextBlock Text="HDS" Foreground="#FFFFFF"
+                                                   FontSize="9" FontWeight="Bold" FontFamily="Consolas"/>
+                                    </Border>
+                                </Grid>
+                            </Border>
+
+                            <!-- Editor content placeholder (AvalonEdit Phase 2) -->
+                            <TextBlock Text="editor  —  phase 2"
+                                       Foreground="{DynamicResource TextDimBrush}"
+                                       FontFamily="Consolas" FontSize="13"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"
+                                       Margin="0,34,0,0"/>
+                        </Grid>
+                    </Border>
+
+                    <GridSplitter Grid.Column="3" Width="5" HorizontalAlignment="Stretch"
+                                  Cursor="SizeWE">
+                        <GridSplitter.Background>
+                            <SolidColorBrush Color="{DynamicResource BorderDim}"/>
+                        </GridSplitter.Background>
+                    </GridSplitter>
+
+                    <!-- ══ IR OUTPUT PANEL ══ -->
+                    <Border Grid.Column="4"
+                            Margin="0,10,10,10"
+                            CornerRadius="10" BorderThickness="1">
+                        <Border.BorderBrush>
+                            <SolidColorBrush Color="{DynamicResource AccentColor}" Opacity="0.25"/>
+                        </Border.BorderBrush>
+                        <Border.Background>
+                            <SolidColorBrush Color="{DynamicResource PanelBgDark}" Opacity="0.4"/>
+                        </Border.Background>
+                        <Grid>
+                            <!-- IR panel header -->
+                            <Border Height="34" VerticalAlignment="Top"
+                                    CornerRadius="10,10,0,0" BorderThickness="0,0,0,1">
+                                <Border.Background>
+                                    <SolidColorBrush Color="{DynamicResource BgLight}" Opacity="0.35"/>
+                                </Border.Background>
+                                <Border.BorderBrush>
+                                    <SolidColorBrush Color="{DynamicResource AccentColor}" Opacity="0.12"/>
+                                </Border.BorderBrush>
+                                <Grid Margin="10,0">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                        <!-- [IR] badge -->
+                                        <Border CornerRadius="3" Padding="6,2" BorderThickness="1">
+                                            <Border.Background>
+                                                <SolidColorBrush Color="{DynamicResource BorderDim}"/>
+                                            </Border.Background>
+                                            <Border.BorderBrush>
+                                                <SolidColorBrush Color="{DynamicResource AccentColor}"/>
+                                            </Border.BorderBrush>
+                                            <TextBlock Text="IR" Foreground="{DynamicResource AccentBrush}"
+                                                       FontSize="9" FontWeight="Bold" FontFamily="Consolas"/>
+                                        </Border>
+                                        <TextBlock Text=" OUTPUT"
+                                                   Foreground="{DynamicResource TextDimBrush}"
+                                                   FontSize="10" FontFamily="Consolas"
+                                                   VerticalAlignment="Center" Margin="6,0,0,0"/>
+                                    </StackPanel>
+                                    <!-- mode toggle right -->
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                        <Button Content="mnemonic" Style="{StaticResource MenuBarButton}"
+                                                FontSize="10" Height="20" Padding="6,0"
+                                                Click="IRModeBtn_Click"/>
+                                        <Button Content="hex" Style="{StaticResource MenuBarButton}"
+                                                FontSize="10" Height="20" Padding="6,0"
+                                                Click="IRModeBtn_Click"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+
+                            <!-- IR content -->
+                            <ScrollViewer Margin="0,34,0,0"
+                                          VerticalScrollBarVisibility="Auto"
+                                          HorizontalScrollBarVisibility="Auto">
+                                <TextBox x:Name="IROutputBox"
+                                         Background="Transparent"
+                                         Foreground="#FFFFFF"
+                                         BorderThickness="0"
+                                         FontFamily="Consolas" FontSize="12"
+                                         IsReadOnly="True"
+                                         AcceptsReturn="True"
+                                         TextWrapping="NoWrap"
+                                         Padding="12"/>
+                            </ScrollViewer>
+                        </Grid>
+                    </Border>
+                </Grid>
+
+                <!-- ── STATUS STRIP ── -->
+                <Border Grid.Row="3"
+                        Background="#110818"
+                        BorderBrush="{DynamicResource BorderDimBrush}"
+                        BorderThickness="0,1,0,0">
+                    <Grid Margin="14,0">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                            <TextBlock x:Name="StatusText"
+                                       Foreground="{DynamicResource TextDimBrush}"
+                                       FontFamily="Consolas" FontSize="10"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                            <Button Content="▶  Build"
+                                    Width="80" Height="18"
+                                    Style="{StaticResource AccentButton}"
+                                    FontSize="10" FontWeight="Bold"
+                                    Click="BuildBtn_Click"/>
+                            <TextBlock Text="  F5"
+                                       Foreground="{DynamicResource TextDimBrush}"
+                                       FontFamily="Consolas" FontSize="10"
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+            </Grid>
+        </Grid>
+    </Border>
+</Window>
