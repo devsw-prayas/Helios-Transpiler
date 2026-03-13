@@ -1,9 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.37012.4 d17.14
+VisualStudioVersion = 17.14.37012.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helios-Transpiler", "Helios-Transpiler\Helios-Transpiler.csproj", "{846F371A-77BC-460A-AD29-140991A526FA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeliosCompiler", "HeliosCompiler\HeliosCompiler.csproj", "{EA0902D2-3E60-4357-A52B-CD8F843DB254}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeliosCompilerRegistry", "HeliosCompilerRegistry\HeliosCompilerRegistry.csproj", "{53B1DCFF-9189-4BC8-BFBA-6FE4949E72FB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +24,14 @@ Global
 		{846F371A-77BC-460A-AD29-140991A526FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{846F371A-77BC-460A-AD29-140991A526FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{846F371A-77BC-460A-AD29-140991A526FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA0902D2-3E60-4357-A52B-CD8F843DB254}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA0902D2-3E60-4357-A52B-CD8F843DB254}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA0902D2-3E60-4357-A52B-CD8F843DB254}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA0902D2-3E60-4357-A52B-CD8F843DB254}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53B1DCFF-9189-4BC8-BFBA-6FE4949E72FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53B1DCFF-9189-4BC8-BFBA-6FE4949E72FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53B1DCFF-9189-4BC8-BFBA-6FE4949E72FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53B1DCFF-9189-4BC8-BFBA-6FE4949E72FB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
