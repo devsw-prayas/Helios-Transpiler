@@ -1,5 +1,9 @@
+using System;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Interop;
+using System.Windows.Shell;
 using Helios_Transpiler.Models;
 
 namespace Helios_Transpiler.Views
@@ -8,11 +12,32 @@ namespace Helios_Transpiler.Views
     {
         private readonly HdxProject? _project;
 
+        // ── P/Invoke ──────────────────────────────────────────────────────────
+        [DllImport("user32.dll")] private static extern bool GetWindowRect(IntPtr hwnd, out RECT lpRect);
+        [DllImport("user32.dll")] private static extern bool GetMonitorInfo(IntPtr hMonitor, ref MONITORINFO lpmi);
+        [DllImport("user32.dll")] private static extern IntPtr MonitorFromWindow(IntPtr hwnd, uint dwFlags);
+        private const uint MONITOR_DEFAULTTONEAREST = 2;
+        [StructLayout(LayoutKind.Sequential)] private struct RECT { public int Left, Top, Right, Bottom; }
+        private struct MONITORINFO { public int cbSize; public RECT rcMonitor; public RECT rcWork; public uint dwFlags; }
+
+        // ── Ctor ──────────────────────────────────────────────────────────────
         public MainWindow(HdxProject? project)
         {
             _project = project;
             InitializeComponent();
             DataContext = this;
+
+            var chrome = new WindowChrome
+            {
+                CaptionHeight = 0,
+                ResizeBorderThickness = new Thickness(6),
+                GlassFrameThickness = new Thickness(0),
+                UseAeroCaptionButtons = false,
+                NonClientFrameEdges = NonClientFrameEdges.None
+            };
+            WindowChrome.SetWindowChrome(this, chrome);
+
+            Loaded += (_, _) => StateChanged += OnStateChanged;
 
             if (project != null)
             {
@@ -39,14 +64,39 @@ namespace Helios_Transpiler.Views
             }
         }
 
-        // ── Title bar chrome ──────────────────────────────────────────────
+        // ── Maximised margin fix ──────────────────────────────────────────────
+        private void OnStateChanged(object? sender, EventArgs e)
+        {
+            if (WindowState == WindowState.Maximized)
+                Dispatcher.BeginInvoke(
+                    () => RootBorder.Margin = GetMaximizedOverhang());
+            else
+                RootBorder.Margin = new Thickness(0);
+        }
 
+        private Thickness GetMaximizedOverhang()
+        {
+            var hwnd = new WindowInteropHelper(this).Handle;
+            GetWindowRect(hwnd, out RECT winRect);
+            var hMon = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
+            var mi = new MONITORINFO { cbSize = Marshal.SizeOf<MONITORINFO>() };
+            GetMonitorInfo(hMon, ref mi);
+            var work = mi.rcWork;
+            int left = work.Left - winRect.Left;
+            int top = work.Top - winRect.Top;
+            int right = winRect.Right - work.Right;
+            int bottom = winRect.Bottom - work.Bottom;
+            var source = PresentationSource.FromVisual(this);
+            if (source?.CompositionTarget == null) return new Thickness(left, top, right, bottom);
+            var m = source.CompositionTarget.TransformFromDevice;
+            return new Thickness(left * m.M11, top * m.M22, right * m.M11, bottom * m.M22);
+        }
+
+        // ── Title bar chrome ──────────────────────────────────────────────────
         private void TitleBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.ClickCount == 2)
-                WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
-            else
-                DragMove();
+            if (e.ClickCount == 2) { MaximizeBtn_Click(sender, e); return; }
+            DragMove();
         }
 
         private void MinimizeBtn_Click(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
@@ -54,18 +104,17 @@ namespace Helios_Transpiler.Views
             => WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
         private void CloseBtn_Click(object sender, RoutedEventArgs e) => Close();
 
-        // ── Menu stubs ────────────────────────────────────────────────────
-
+        // ── Menu stubs ────────────────────────────────────────────────────────
         private void FileMenuBtn_Click(object sender, RoutedEventArgs e)
             => FileMenuPopup.IsOpen = !FileMenuPopup.IsOpen;
 
         private void ViewMenuBtn_Click(object sender, RoutedEventArgs e)
             => ViewMenuPopup.IsOpen = !ViewMenuPopup.IsOpen;
 
-        private void NewFile_Click(object sender, RoutedEventArgs e)    { FileMenuPopup.IsOpen = false; }
-        private void SaveFile_Click(object sender, RoutedEventArgs e)   { FileMenuPopup.IsOpen = false; }
+        private void NewFile_Click(object sender, RoutedEventArgs e) { FileMenuPopup.IsOpen = false; }
+        private void SaveFile_Click(object sender, RoutedEventArgs e) { FileMenuPopup.IsOpen = false; }
         private void SaveAsFile_Click(object sender, RoutedEventArgs e) { FileMenuPopup.IsOpen = false; }
-        private void CloseTab_Click(object sender, RoutedEventArgs e)   { FileMenuPopup.IsOpen = false; }
+        private void CloseTab_Click(object sender, RoutedEventArgs e) { FileMenuPopup.IsOpen = false; }
 
         private void OpenProject_Click(object sender, RoutedEventArgs e)
         {
@@ -77,9 +126,8 @@ namespace Helios_Transpiler.Views
             };
             if (dlg.ShowDialog() == true)
             {
-                string s = "";
-                var sve = new Services.RecentProjectsService();
-                var proj = sve.ParseProjectFile(dlg.FileName, out s);
+                var svc = new Services.RecentProjectsService();
+                var proj = svc.ParseProjectFile(dlg.FileName, out _);
                 if (proj != null)
                 {
                     TitleProjectLabel.Text = proj.Name;
@@ -102,10 +150,7 @@ namespace Helios_Transpiler.Views
             StatusText.Text = "build complete  ·  0 errors  ·  0 warnings";
         }
 
-        private void IRModeBtn_Click(object sender, RoutedEventArgs e) { }
-
-        // ── View toggles ──────────────────────────────────────────────────
-
+        // ── View toggles ──────────────────────────────────────────────────────
         private void ToggleProjectPanel_Click(object sender, RoutedEventArgs e)
         {
             ViewMenuPopup.IsOpen = false;
@@ -119,7 +164,7 @@ namespace Helios_Transpiler.Views
             ViewMenuPopup.IsOpen = false;
             IRPanelCol.Width = IRPanelCol.Width.Value > 0
                 ? new GridLength(0)
-                : new GridLength(320);
+                : new GridLength(340);
         }
 
         private void ToggleOutputPanel_Click(object sender, RoutedEventArgs e)
@@ -127,8 +172,7 @@ namespace Helios_Transpiler.Views
             ViewMenuPopup.IsOpen = false;
         }
 
-        // ── Keyboard shortcuts ────────────────────────────────────────────
-
+        // ── Keyboard shortcuts ────────────────────────────────────────────────
         protected override void OnKeyDown(KeyEventArgs e)
         {
             base.OnKeyDown(e);

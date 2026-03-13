@@ -4,47 +4,39 @@
         xmlns:models="clr-namespace:Helios_Transpiler.Models"
         xmlns:infra="clr-namespace:Helios_Transpiler.Infrastructure"
         Title="Helios-DLX Transpiler"
-        Height="620" Width="1020"
-        MinHeight="480" MinWidth="760"
+        Height="700" Width="1160"
+        MinHeight="560" MinWidth="860"
         WindowStartupLocation="CenterScreen"
         Background="Transparent"
         WindowStyle="None"
-        AllowsTransparency="True"
-        ResizeMode="CanResizeWithGrip">
+        ResizeMode="CanResize">
 
     <Window.Resources>
-        <infra:PinIconConverter      x:Key="PinIconConverter"/>
+        <infra:PinIconConverter           x:Key="PinIconConverter"/>
         <infra:CountToVisibilityConverter x:Key="CountToVisibilityConverter"/>
 
-        <!-- Row list item -->
         <Style x:Key="Row" TargetType="ListBoxItem">
-            <Setter Property="Background"                     Value="Transparent"/>
-            <Setter Property="BorderThickness"                Value="0"/>
-            <Setter Property="Padding"                        Value="0"/>
-            <Setter Property="Margin"                         Value="0"/>
-            <Setter Property="Cursor"                         Value="Hand"/>
-            <Setter Property="HorizontalContentAlignment"     Value="Stretch"/>
+            <Setter Property="Background"                 Value="Transparent"/>
+            <Setter Property="BorderThickness"            Value="0"/>
+            <Setter Property="Padding"                    Value="0"/>
+            <Setter Property="Margin"                     Value="0"/>
+            <Setter Property="Cursor"                     Value="Hand"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ListBoxItem">
                         <Border x:Name="Bd" Background="Transparent"
-                                BorderBrush="{DynamicResource BorderDimBrush}"
-                                BorderThickness="0,0,0,1" Padding="14,8">
+                                BorderBrush="#101C1C" BorderThickness="0,0,0,1"
+                                Padding="20,12">
                             <ContentPresenter/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Bd" Property="Background">
-                                    <Setter.Value><SolidColorBrush Color="{DynamicResource BorderDim}" Opacity="1.2"/></Setter.Value>
-                                </Setter>
+                                <Setter TargetName="Bd" Property="Background" Value="#0A1A1A"/>
                             </Trigger>
                             <Trigger Property="IsSelected" Value="True">
-                                <Setter TargetName="Bd" Property="Background">
-                                    <Setter.Value><SolidColorBrush Color="{DynamicResource BorderMid}"/></Setter.Value>
-                                </Setter>
-                                <Setter TargetName="Bd" Property="BorderBrush">
-                                    <Setter.Value><SolidColorBrush Color="{DynamicResource AccentDimColor}" Opacity="0.4"/></Setter.Value>
-                                </Setter>
+                                <Setter TargetName="Bd" Property="Background" Value="#0D2020"/>
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="#1A3A3A"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -52,33 +44,30 @@
             </Setter>
         </Style>
 
-        <!-- Row data template -->
         <DataTemplate x:Key="RowTemplate" DataType="{x:Type models:RecentProject}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="160"/>
-                    <ColumnDefinition Width="26"/>
+                    <ColumnDefinition Width="180"/>
+                    <ColumnDefinition Width="30"/>
                 </Grid.ColumnDefinitions>
-                <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,8,0">
+                <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,12,0">
                     <TextBlock Text="{Binding Name}"
-                               Foreground="#FFFFFF"
-                               FontFamily="Consolas" FontSize="13"/>
+                               Foreground="#D0F0EE"
+                               FontFamily="Consolas" FontSize="14"/>
                     <TextBlock Text="{Binding FilePath}"
-                               Foreground="{DynamicResource AccentBrush}"
-                               Opacity="0.5"
+                               Foreground="#2A6060"
                                FontFamily="Consolas" FontSize="11"
                                TextTrimming="CharacterEllipsis"
-                               Margin="0,2,0,0"/>
+                               Margin="0,3,0,0"/>
                 </StackPanel>
                 <TextBlock Grid.Column="1"
                            Text="{Binding LastOpenedDisplay}"
-                           Foreground="{DynamicResource TextDimBrush}"
+                           Foreground="#1E4444"
                            FontFamily="Consolas" FontSize="11"
                            VerticalAlignment="Center"
                            HorizontalAlignment="Right"
-                           Margin="0,0,12,0"/>
-                <!-- Pin button -->
+                           Margin="0,0,14,0"/>
                 <Button Grid.Column="2"
                         Background="Transparent" BorderThickness="0"
                         Cursor="Hand" Padding="0"
@@ -89,12 +78,12 @@
                         <ControlTemplate TargetType="Button">
                             <TextBlock x:Name="G"
                                        Text="{Binding IsPinned, Converter={StaticResource PinIconConverter}}"
-                                       FontFamily="Consolas" FontSize="12"
-                                       Foreground="{DynamicResource TextDimBrush}"
+                                       FontFamily="Consolas" FontSize="13"
+                                       Foreground="#1E4444"
                                        VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             <ControlTemplate.Triggers>
                                 <DataTrigger Binding="{Binding IsPinned}" Value="True">
-                                    <Setter TargetName="G" Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+                                    <Setter TargetName="G" Property="Foreground" Value="#4EC9B0"/>
                                 </DataTrigger>
                                 <Trigger Property="IsMouseOver" Value="True">
                                     <Setter TargetName="G" Property="Foreground" Value="#FFFFFF"/>
@@ -106,68 +95,101 @@
             </Grid>
         </DataTemplate>
 
-        <!-- Flat listbox -->
         <Style x:Key="FlatList" TargetType="ListBox">
             <Setter Property="Background"      Value="Transparent"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Padding"         Value="0"/>
             <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
         </Style>
+
+        <Style x:Key="ActionBtn" TargetType="Button">
+            <Setter Property="Background"      Value="Transparent"/>
+            <Setter Property="Foreground"      Value="#8ECFC9"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontFamily"      Value="Consolas"/>
+            <Setter Property="FontSize"        Value="14"/>
+            <Setter Property="Cursor"          Value="Hand"/>
+            <Setter Property="Height"          Value="38"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Padding"         Value="12,0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bd" Background="{TemplateBinding Background}"
+                                CornerRadius="4" Padding="{TemplateBinding Padding}"
+                                BorderThickness="1" BorderBrush="Transparent">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#0D2020"/>
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="#1A3A3A"/>
+                                <Setter Property="Foreground" Value="#D0F0EE"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#0A2828"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
 
-    <!-- ══ ROOT BORDER — rounded + gradient ══ -->
-    <Border CornerRadius="12" ClipToBounds="True">
+    <Border x:Name="RootBorder" CornerRadius="10" ClipToBounds="True">
         <Border.Background>
             <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                <GradientStop Color="{DynamicResource BgLight}" Offset="0"/>
-                <GradientStop Color="{DynamicResource BgMid}"   Offset="0.5"/>
-                <GradientStop Color="{DynamicResource BgDark}"  Offset="1"/>
+                <GradientStop Color="#060E0E" Offset="0"/>
+                <GradientStop Color="#040A0A" Offset="0.6"/>
+                <GradientStop Color="#020606" Offset="1"/>
             </LinearGradientBrush>
         </Border.Background>
 
         <Grid>
-            <!-- ghost watermark -->
+            <!-- Watermark -->
             <StackPanel HorizontalAlignment="Right" VerticalAlignment="Bottom"
-                        Margin="0,0,20,10" IsHitTestVisible="False" Panel.ZIndex="0">
+                        Margin="0,0,24,8" IsHitTestVisible="False" Panel.ZIndex="0">
                 <TextBlock Text="HDS"
-                           FontSize="130" FontWeight="Black"
-                           FontFamily="Consolas"
-                           Foreground="{DynamicResource AccentBrush}"
-                           Opacity="0.04" LineHeight="120"/>
+                           FontSize="160" FontWeight="Black" FontFamily="Consolas"
+                           Foreground="#4EC9B0" Opacity="0.025" LineHeight="145"/>
                 <TextBlock Text=".HLX"
-                           FontSize="130" FontWeight="Black"
-                           FontFamily="Consolas"
-                           Foreground="{DynamicResource AccentBrush}"
-                           Opacity="0.04" LineHeight="120"/>
+                           FontSize="160" FontWeight="Black" FontFamily="Consolas"
+                           Foreground="#4EC9B0" Opacity="0.025" LineHeight="145"/>
             </StackPanel>
 
             <Grid Panel.ZIndex="1">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="44"/>
+                    <RowDefinition Height="46"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <!-- ── TITLE BAR ── -->
+                <!-- TITLE BAR -->
                 <Border Grid.Row="0"
-                        Background="#441A0830"
-                        BorderBrush="{DynamicResource BorderDimBrush}"
-                        BorderThickness="0,0,0,1"
+                        BorderBrush="#0E1E1E" BorderThickness="0,0,0,1"
+                        Background="#060E0E"
                         MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
-                    <Grid Margin="16,0">
+                    <Grid Margin="18,0,8,0">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
-                            <TextBlock Foreground="{DynamicResource AccentBrush}"
-                                       FontSize="13" FontWeight="Black"
-                                       FontFamily="Consolas"
+                            <Border Width="2" Height="16" CornerRadius="1" Margin="0,0,14,0">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                        <GradientStop Color="#80FFE8" Offset="0"/>
+                                        <GradientStop Color="#2A8070" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                            </Border>
+                            <TextBlock Foreground="#4EC9B0"
+                                       FontSize="13" FontWeight="Bold" FontFamily="Consolas"
                                        VerticalAlignment="Center" Margin="0,0,12,0">
                                 <TextBlock.Text>HELIOS-DLX</TextBlock.Text>
                                 <TextBlock.Effect>
-                                    <DropShadowEffect Color="{DynamicResource AccentColor}"
-                                                      BlurRadius="14" ShadowDepth="0" Opacity="0.8"/>
+                                    <DropShadowEffect Color="#4EC9B0" BlurRadius="12" ShadowDepth="0" Opacity="0.7"/>
                                 </TextBlock.Effect>
                             </TextBlock>
-                            <TextBlock Text="//  transpiler"
-                                       Foreground="{DynamicResource TextDimBrush}"
-                                       FontSize="12" FontFamily="Consolas" VerticalAlignment="Center"/>
+                            <TextBlock Text="// transpiler"
+                                       Foreground="#1A3A3A" FontSize="12" FontFamily="Consolas"
+                                       VerticalAlignment="Center"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
                             <Button Content="—" Style="{StaticResource WindowButton}" Click="MinimizeBtn_Click"/>
@@ -177,46 +199,49 @@
                     </Grid>
                 </Border>
 
-                <!-- ── BODY ── -->
+                <!-- BODY -->
                 <Grid Grid.Row="1">
                     <Grid.ColumnDefinitions>
-                        <!-- LEFT: project list -->
-                        <ColumnDefinition Width="2*" MinWidth="280"/>
-                        <!-- thin accent separator -->
+                        <ColumnDefinition Width="2*" MinWidth="320"/>
                         <ColumnDefinition Width="1"/>
-                        <!-- RIGHT: actions -->
-                        <ColumnDefinition Width="220"/>
+                        <ColumnDefinition Width="260"/>
                     </Grid.ColumnDefinitions>
 
-                    <!-- ══ LEFT PANEL ══ -->
+                    <!-- LEFT PANEL -->
                     <Grid Grid.Column="0">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>  <!-- search -->
-                            <RowDefinition Height="Auto"/>  <!-- col headers -->
-                            <RowDefinition Height="*"/>     <!-- list -->
-                            <RowDefinition Height="22"/>    <!-- status strip -->
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="30"/>
                         </Grid.RowDefinitions>
 
                         <!-- Search -->
-                        <Border Grid.Row="0"
-                                BorderBrush="{DynamicResource BorderDimBrush}"
-                                BorderThickness="0,0,0,1"
-                                Background="#220A1A30">
+                        <Border Grid.Row="0" BorderBrush="#0E1E1E" BorderThickness="0,0,0,1" Background="#040C0C">
                             <Grid>
+                                <TextBlock Text="⌕" Foreground="#1A3A3A" FontSize="20"
+                                           FontFamily="Consolas" VerticalAlignment="Center"
+                                           Margin="18,0,0,0" IsHitTestVisible="False">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Text, ElementName=SearchBox}" Value="">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
                                 <TextBox x:Name="SearchBox"
                                          Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
-                                         Background="Transparent"
-                                         Foreground="#FFFFFF"
-                                         CaretBrush="{DynamicResource AccentBrush}"
-                                         BorderThickness="0"
-                                         FontFamily="Consolas" FontSize="12"
-                                         Padding="14,10"/>
-                                <TextBlock Text="search  (Alt+S)"
-                                           Foreground="{DynamicResource TextDimBrush}"
-                                           FontFamily="Consolas" FontSize="12"
-                                           Margin="14,0,0,0"
-                                           IsHitTestVisible="False"
-                                           VerticalAlignment="Center">
+                                         Background="Transparent" Foreground="#D0F0EE"
+                                         CaretBrush="#4EC9B0" BorderThickness="0"
+                                         FontFamily="Consolas" FontSize="16"
+                                         Padding="48,18,16,18"/>
+                                <TextBlock Text="search recent projects  (Alt+S)"
+                                           Foreground="#0E2424" FontFamily="Consolas" FontSize="16"
+                                           Margin="48,0,0,0" IsHitTestVisible="False" VerticalAlignment="Center">
                                     <TextBlock.Style>
                                         <Style TargetType="TextBlock">
                                             <Setter Property="Visibility" Value="Collapsed"/>
@@ -232,73 +257,47 @@
                         </Border>
 
                         <!-- Column headers -->
-                        <Border Grid.Row="1"
-                                BorderBrush="{DynamicResource BorderDimBrush}"
-                                BorderThickness="0,0,0,1"
-                                Background="#110818">
-                            <Grid Margin="14,0">
+                        <Border Grid.Row="1" BorderBrush="#0E1E1E" BorderThickness="0,0,0,1" Background="#030A0A">
+                            <Grid Margin="20,0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="160"/>
-                                    <ColumnDefinition Width="26"/>
+                                    <ColumnDefinition Width="180"/>
+                                    <ColumnDefinition Width="30"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="NAME"
-                                           Foreground="{DynamicResource AccentBrush}"
-                                           Opacity="0.6"
-                                           FontFamily="Consolas" FontSize="9" FontWeight="Bold"
-                                           VerticalAlignment="Center" Height="24"/>
+                                <TextBlock Grid.Column="0"
+                                           Foreground="#4EC9B0" Opacity="0.4"
+                                           FontFamily="Consolas" FontSize="20" FontWeight="Bold"
+                                           VerticalAlignment="Center" Height="30" Margin="275,0,0,0"/>
                                 <TextBlock Grid.Column="1" Text="LAST OPENED"
-                                           Foreground="{DynamicResource AccentBrush}"
-                                           Opacity="0.6"
-                                           FontFamily="Consolas" FontSize="9" FontWeight="Bold"
-                                           HorizontalAlignment="Right" Margin="0,0,12,0"
+                                           Foreground="#4EC9B0" Opacity="0.4"
+                                           FontFamily="Consolas" FontSize="18" FontWeight="Bold"
+                                           HorizontalAlignment="Right" Margin="0,0,14,0"
                                            VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="0" Text="NAME"
+                                    Foreground="#4EC9B0" Opacity="0.4"
+                                    FontFamily="Consolas" FontSize="18" FontWeight="Bold"
+                                    VerticalAlignment="Center" Margin="0,0,476,0"/>
                             </Grid>
                         </Border>
 
-                        <!-- Project list -->
-                        <ScrollViewer Grid.Row="2"
-                                      VerticalScrollBarVisibility="Auto"
+                        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto"
                                       HorizontalScrollBarVisibility="Disabled">
                             <StackPanel>
-                                <!-- PINNED section -->
-                                <TextBlock Text="PINNED"
-                                           Foreground="{DynamicResource AccentBrush}"
-                                           Opacity="0.5"
-                                           FontFamily="Consolas" FontSize="9" FontWeight="Bold"
-                                           Margin="14,10,0,2"
-                                           Visibility="{Binding PinnedProjects.Count,
-                                                        Converter={StaticResource CountToVisibilityConverter}}"/>
                                 <ListBox ItemsSource="{Binding PinnedProjects}"
                                          Style="{StaticResource FlatList}"
                                          ItemContainerStyle="{StaticResource Row}"
                                          ItemTemplate="{StaticResource RowTemplate}"
                                          MouseDoubleClick="List_MouseDoubleClick"
                                          SelectedItem="{Binding SelectedRecent}"/>
-
-                                <!-- RECENT section -->
-                                <TextBlock Text="RECENT"
-                                           Foreground="{DynamicResource AccentBrush}"
-                                           Opacity="0.5"
-                                           FontFamily="Consolas" FontSize="9" FontWeight="Bold"
-                                           Margin="14,10,0,2"
-                                           Visibility="{Binding RecentProjects.Count,
-                                                        Converter={StaticResource CountToVisibilityConverter}}"/>
                                 <ListBox ItemsSource="{Binding RecentProjects}"
                                          Style="{StaticResource FlatList}"
                                          ItemContainerStyle="{StaticResource Row}"
                                          ItemTemplate="{StaticResource RowTemplate}"
                                          MouseDoubleClick="List_MouseDoubleClick"
                                          SelectedItem="{Binding SelectedRecent}"/>
-
-                                <!-- Empty state -->
-                                <TextBlock Text="no recent projects"
-                                           Foreground="{DynamicResource TextDimBrush}"
-                                           FontFamily="Consolas" FontSize="13"
-                                           HorizontalAlignment="Center"
-                                           Margin="0,48,0,0">
-                                    <TextBlock.Style>
-                                        <Style TargetType="TextBlock">
+                                <StackPanel HorizontalAlignment="Center" Margin="0,64,0,0">
+                                    <StackPanel.Style>
+                                        <Style TargetType="StackPanel">
                                             <Setter Property="Visibility" Value="Collapsed"/>
                                             <Style.Triggers>
                                                 <MultiDataTrigger>
@@ -310,19 +309,20 @@
                                                 </MultiDataTrigger>
                                             </Style.Triggers>
                                         </Style>
-                                    </TextBlock.Style>
-                                </TextBlock>
+                                    </StackPanel.Style>
+                                    <TextBlock Text="no recent projects"
+                                               Foreground="#1A3A3A" FontFamily="Consolas" FontSize="14"
+                                               HorizontalAlignment="Center"/>
+                                    <TextBlock Text="open or create a project to get started"
+                                               Foreground="#0E2424" FontFamily="Consolas" FontSize="11"
+                                               HorizontalAlignment="Center" Margin="0,6,0,0"/>
+                                </StackPanel>
                             </StackPanel>
                         </ScrollViewer>
 
-                        <!-- Status strip -->
-                        <Border Grid.Row="3"
-                                Background="#110818"
-                                BorderBrush="{DynamicResource BorderDimBrush}"
-                                BorderThickness="0,1,0,0">
-                            <TextBlock Foreground="{DynamicResource TextDimBrush}"
-                                       FontFamily="Consolas" FontSize="10"
-                                       VerticalAlignment="Center" Margin="14,0">
+                        <Border Grid.Row="3" Background="#030A0A" BorderBrush="#0E1E1E" BorderThickness="0,1,0,0">
+                            <TextBlock Foreground="#1A3A3A" FontFamily="Consolas" FontSize="14"
+                                       VerticalAlignment="Center" Margin="20,0">
                                 <Run Text="{Binding RecentProjects.Count, Mode=OneWay}"/>
                                 <Run Text=" recent  ·  "/>
                                 <Run Text="{Binding PinnedProjects.Count, Mode=OneWay}"/>
@@ -331,138 +331,93 @@
                         </Border>
                     </Grid>
 
-                    <!-- accent separator line -->
-                    <Rectangle Grid.Column="1">
-                        <Rectangle.Fill>
-                            <SolidColorBrush Color="{DynamicResource AccentDimColor}" Opacity="0.25"/>
-                        </Rectangle.Fill>
-                    </Rectangle>
+                    <Rectangle Grid.Column="1" Fill="#0E1E1E"/>
 
-                    <!-- ══ RIGHT PANEL ══ -->
-                    <Grid Grid.Column="2">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="28"/>
-                        </Grid.RowDefinitions>
-
-                        <StackPanel Grid.Row="0" Margin="16,16,16,0">
-
-                            <!-- section label -->
-                            <TextBlock Text="START"
-                                       Foreground="{DynamicResource AccentBrush}"
-                                       Opacity="0.55"
-                                       FontFamily="Consolas" FontSize="9" FontWeight="Bold"
-                                       Margin="0,0,0,10"/>
-
-                            <!-- New project -->
-                            <Button Style="{StaticResource MenuBarButton}"
-                                    HorizontalContentAlignment="Left"
-                                    HorizontalAlignment="Stretch"
-                                    Command="{Binding NewProjectCommand}">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="＋"
-                                               Foreground="{DynamicResource AccentBrush}"
-                                               FontSize="14" Margin="0,0,10,0" VerticalAlignment="Center"/>
-                                    <TextBlock Text="New project" VerticalAlignment="Center"/>
-                                </StackPanel>
-                            </Button>
-
-                            <!-- Open project -->
-                            <Button Style="{StaticResource MenuBarButton}"
-                                    HorizontalContentAlignment="Left"
-                                    HorizontalAlignment="Stretch"
-                                    Command="{Binding OpenProjectCommand}">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="→"
-                                               FontSize="13" Margin="0,0,10,0" VerticalAlignment="Center"/>
-                                    <TextBlock Text="Open project" VerticalAlignment="Center"/>
-                                </StackPanel>
-                            </Button>
-
-                            <!-- Open folder -->
-                            <Button Style="{StaticResource MenuBarButton}"
-                                    HorizontalContentAlignment="Left"
-                                    HorizontalAlignment="Stretch"
-                                    Command="{Binding OpenFolderCommand}">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="→"
-                                               FontSize="13" Margin="0,0,10,0" VerticalAlignment="Center"/>
-                                    <TextBlock Text="Open folder" VerticalAlignment="Center"/>
-                                </StackPanel>
-                            </Button>
-
-                            <!-- divider -->
-                            <Border Height="1"
-                                    Background="{DynamicResource BorderDimBrush}"
-                                    Margin="0,10,0,10"/>
-
-                            <!-- PINNED quick-open -->
-                            <TextBlock Text="PINNED"
-                                       Foreground="{DynamicResource AccentBrush}"
-                                       Opacity="0.55"
-                                       FontFamily="Consolas" FontSize="9" FontWeight="Bold"
-                                       Margin="0,0,0,6"
-                                       Visibility="{Binding PinnedProjects.Count,
-                                                    Converter={StaticResource CountToVisibilityConverter}}"/>
-                            <ItemsControl ItemsSource="{Binding PinnedProjects}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <Button Style="{StaticResource MenuBarButton}"
-                                                HorizontalContentAlignment="Left"
-                                                HorizontalAlignment="Stretch"
-                                                Command="{Binding DataContext.OpenRecentCommand,
-                                                          RelativeSource={RelativeSource AncestorType=Window}}"
-                                                CommandParameter="{Binding}">
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="◆"
-                                                           Foreground="{DynamicResource AccentDimBrush}"
-                                                           FontSize="8" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                                                <TextBlock Text="{Binding Name}"
-                                                           FontFamily="Consolas" FontSize="12"
-                                                           TextTrimming="CharacterEllipsis"/>
-                                            </StackPanel>
-                                        </Button>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-
-                        </StackPanel>
-
-                        <!-- Version / continue strip -->
-                        <Border Grid.Row="1"
-                                Background="#110818"
-                                BorderBrush="{DynamicResource BorderDimBrush}"
-                                BorderThickness="0,1,0,0">
-                            <DockPanel Margin="14,0">
-                                <TextBlock Text="v1.0.0  ·  hdx"
-                                           Foreground="{DynamicResource TextDimBrush}"
-                                           FontFamily="Consolas" FontSize="10"
-                                           VerticalAlignment="Center"
-                                           DockPanel.Dock="Left"/>
-                                <Button DockPanel.Dock="Right"
-                                        Background="Transparent" BorderThickness="0"
-                                        Cursor="Hand" Padding="0"
-                                        VerticalAlignment="Center" HorizontalAlignment="Right"
-                                        Click="ContinueWithoutCode_Click">
-                                    <Button.Template>
-                                        <ControlTemplate TargetType="Button">
-                                            <TextBlock x:Name="Lbl"
-                                                       Text="Continue without code →"
-                                                       Foreground="{DynamicResource TextDimBrush}"
-                                                       FontFamily="Consolas" FontSize="10"
-                                                       VerticalAlignment="Center"/>
-                                            <ControlTemplate.Triggers>
-                                                <Trigger Property="IsMouseOver" Value="True">
-                                                    <Setter TargetName="Lbl" Property="Foreground" Value="#FFFFFF"/>
-                                                </Trigger>
-                                            </ControlTemplate.Triggers>
-                                        </ControlTemplate>
-                                    </Button.Template>
+                    <!-- RIGHT PANEL -->
+                    <Border Grid.Column="2" Background="#040C0C">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="28"/>
+                            </Grid.RowDefinitions>
+                            <StackPanel Grid.Row="0" Margin="20,20,20,0">
+                                <TextBlock Text="START"
+                                           Foreground="#4EC9B0" Opacity="0.4"
+                                           FontFamily="Consolas" FontSize="15" FontWeight="Bold"
+                                           Margin="4,0,0,12"/>
+                                <Button Style="{StaticResource ActionBtn}" HorizontalAlignment="Stretch"
+                                        Command="{Binding NewProjectCommand}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="＋" Foreground="#4EC9B0"
+                                                   FontSize="14" Margin="0,0,12,0" VerticalAlignment="Center"/>
+                                        <TextBlock Text="New project" VerticalAlignment="Center"/>
+                                    </StackPanel>
                                 </Button>
-                            </DockPanel>
-                        </Border>
-                    </Grid>
-
+                                <Button Style="{StaticResource ActionBtn}" HorizontalAlignment="Stretch"
+                                        Command="{Binding OpenProjectCommand}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="→" Foreground="#2A6060"
+                                                   FontSize="13" Margin="0,0,12,0" VerticalAlignment="Center"/>
+                                        <TextBlock Text="Open project" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
+                                <Button Style="{StaticResource ActionBtn}" HorizontalAlignment="Stretch"
+                                        Command="{Binding OpenFolderCommand}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="→" Foreground="#2A6060"
+                                                   FontSize="13" Margin="0,0,12,0" VerticalAlignment="Center"/>
+                                        <TextBlock Text="Open folder" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
+                                <Border Height="1" Background="#0E1E1E" Margin="4,16,4,16"/>
+                                <TextBlock Text="PINNED"
+                                           Foreground="#4EC9B0" Opacity="0.4"
+                                           FontFamily="Consolas" FontSize="15" FontWeight="Bold"
+                                           Margin="4,0,0,8"
+                                           Visibility="{Binding PinnedProjects.Count, Converter={StaticResource CountToVisibilityConverter}}"/>
+                                <ItemsControl ItemsSource="{Binding PinnedProjects}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Button Style="{StaticResource ActionBtn}" HorizontalAlignment="Stretch"
+                                                    Command="{Binding DataContext.OpenRecentCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                    CommandParameter="{Binding}">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="◆" Foreground="#2A6060"
+                                                               FontSize="8" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                                    <TextBlock Text="{Binding Name}"
+                                                               FontFamily="Consolas" FontSize="13"
+                                                               TextTrimming="CharacterEllipsis"/>
+                                                </StackPanel>
+                                            </Button>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                            <Border Background="#030A0A" BorderBrush="#0E1E1E" BorderThickness="0,1,0,0" Margin="0,624,0,0" Grid.RowSpan="2">
+                                <DockPanel Margin="16,0">
+                                    <TextBlock Text="v1.0.0  ·  hdx"
+                                               Foreground="#1A3A3A" FontFamily="Consolas" FontSize="10"
+                                               VerticalAlignment="Center" DockPanel.Dock="Left"/>
+                                    <Button DockPanel.Dock="Right" Background="Transparent" BorderThickness="0"
+                                            Cursor="Hand" Padding="0" VerticalAlignment="Center"
+                                            HorizontalAlignment="Right" Click="ContinueWithoutCode_Click">
+                                        <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <TextBlock x:Name="Lbl" Text="continue without code →"
+                                                           Foreground="#1A3A3A" FontFamily="Consolas" FontSize="10"
+                                                           VerticalAlignment="Center"/>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="Lbl" Property="Foreground" Value="#4EC9B0"/>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                </DockPanel>
+                            </Border>
+                        </Grid>
+                    </Border>
                 </Grid>
             </Grid>
         </Grid>
