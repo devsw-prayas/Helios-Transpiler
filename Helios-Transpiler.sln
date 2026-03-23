@@ -4,8 +4,14 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.14.37012.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helios-Transpiler", "Helios-Transpiler\Helios-Transpiler.csproj", "{846F371A-77BC-460A-AD29-140991A526FA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EA0902D2-3E60-4357-A52B-CD8F843DB254} = {EA0902D2-3E60-4357-A52B-CD8F843DB254}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeliosCompiler", "HeliosCompiler\HeliosCompiler.csproj", "{EA0902D2-3E60-4357-A52B-CD8F843DB254}"
+	ProjectSection(ProjectDependencies) = postProject
+		{53B1DCFF-9189-4BC8-BFBA-6FE4949E72FB} = {53B1DCFF-9189-4BC8-BFBA-6FE4949E72FB}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeliosCompilerRegistry", "HeliosCompilerRegistry\HeliosCompilerRegistry.csproj", "{53B1DCFF-9189-4BC8-BFBA-6FE4949E72FB}"
 EndProject

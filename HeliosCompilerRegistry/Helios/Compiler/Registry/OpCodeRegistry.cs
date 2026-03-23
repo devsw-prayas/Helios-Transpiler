@@ -425,7 +425,6 @@ namespace Helios.Compiler.Registry
                 ["hadx.rmsprop_mom"] = new(MajorMinor, 0x25, 0x05, 0x07),
                 ["hadx.adagrad_step"] = new(MajorMinor, 0x25, 0x03, 0x08),
                 ["hadx.adagrad_clip"] = new(MajorMinor, 0x25, 0x04, 0x09),
-
             }.ToFrozenDictionary(StringComparer.Ordinal);
         }
     }
